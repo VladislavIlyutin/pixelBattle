@@ -113,12 +113,18 @@ const RegisterForm = () => {
                         </FormErrorMessage>
                     </FormControl>
 
-                    <Stack spacing="6" pt="4">
+                    <Stack spacing="4" pt="2">
                         <Button
                             type="submit"
                             colorScheme="blue"
                         >
                             Зарегистрироваться
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => navigate("/")}
+                        >
+                            Вернуться ко входу
                         </Button>
                     </Stack>
 

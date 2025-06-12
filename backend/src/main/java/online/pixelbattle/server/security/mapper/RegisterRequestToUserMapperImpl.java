@@ -1,16 +1,16 @@
 package online.pixelbattle.server.security.mapper;
 import online.pixelbattle.server.security.model.UserAccount;
-import online.pixelbattle.server.security.web.model.RegisterRequest;
+import online.pixelbattle.server.security.web.dto.RegisterRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserAccountRegisterRequestToUserProfileMapperImpl
-        implements UserAccountRegisterRequestToUserProfileMapper {
+public class RegisterRequestToUserMapperImpl
+        implements RegisterRequestToUserMapper {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserAccountRegisterRequestToUserProfileMapperImpl(PasswordEncoder passwordEncoder) {
+    public RegisterRequestToUserMapperImpl(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 

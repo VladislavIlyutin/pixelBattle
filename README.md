@@ -1,2 +1,43 @@
 # Pixel Battle Game
-"# pixelBattle" 
+
+Pixel Battle - это онлайн-игра, в которой игроки создают пиксельные арты на общем игровом поле. Игроки используют пиксели различных цветов, чтобы создать изображения на заданную тему или свободно выражать свою фантазию.
+
+## Технологии
+
+| Часть приложения | Технологии                                        |
+| ---------------- | ------------------------------------------------- |
+| **Frontend**     | React (TypeScript), Vite, Axios                   |
+| **Backend**      | Java 20, Spring Boot, Spring Web, Spring Data JPA |
+| **База данных**  | PostgreSQL 42.7.7                                 |
+
+## Как запустить проект локально
+
+### Перейди в корень проекта
+
+```
+cd pixel-battle
+```
+
+### Установи зависимости фронтенда
+
+```
+cd frontend
+npm install
+```
+
+### Запусти backend
+
+#### Открой новое окно терминала и выполни:
+
+```
+cd backend
+./mvnw spring-boot:run   # Linux/macOS
+mvnw.cmd spring-boot:run  # Windows
+```
+
+### Запусти frontend
+
+```
+cd frontend
+npm run dev
+```

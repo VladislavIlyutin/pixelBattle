@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
-public class UserDetailsServiseImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserAccountService userAccountService;
 
-    public UserDetailsServiseImpl(UserAccountService userAccountService) {
+    public UserDetailsServiceImpl(UserAccountService userAccountService) {
         this.userAccountService = userAccountService;
     }
 

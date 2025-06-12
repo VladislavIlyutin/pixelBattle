@@ -1,22 +1,22 @@
 package online.pixelbattle.server.security.usecase.impl;
 
-import online.pixelbattle.server.security.mapper.UserAccountRegisterRequestToUserProfileMapper;
+import online.pixelbattle.server.security.mapper.RegisterRequestToUserMapper;
 import online.pixelbattle.server.security.model.UserAccount;
 import online.pixelbattle.server.security.service.UserAccountService;
-import online.pixelbattle.server.security.usecase.UserAccountRegisterUseCase;
-import online.pixelbattle.server.security.web.model.RegisterRequest;
+import online.pixelbattle.server.security.usecase.RegistrationUseCase;
+import online.pixelbattle.server.security.web.dto.RegisterRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserAccountRegisterUseCaseFacade implements UserAccountRegisterUseCase {
+public class UserRegistrationService implements RegistrationUseCase {
 
     private final UserAccountService userAccountService;
-    private final UserAccountRegisterRequestToUserProfileMapper mapper;
+    private final RegisterRequestToUserMapper mapper;
 
-    public UserAccountRegisterUseCaseFacade(
+    public UserRegistrationService(
             UserAccountService userAccountService,
-            UserAccountRegisterRequestToUserProfileMapper mapper) {
+            RegisterRequestToUserMapper mapper) {
         this.userAccountService = userAccountService;
         this.mapper = mapper;
     }
