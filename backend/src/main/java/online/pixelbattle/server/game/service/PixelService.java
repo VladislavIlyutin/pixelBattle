@@ -1,0 +1,81 @@
+package online.pixelbattle.server.game.service;
+
+import online.pixelbattle.server.game.config.CooldownConfig;
+import online.pixelbattle.server.game.config.GridConfig;
+import online.pixelbattle.server.game.dto.PixelUpdateDTO;
+import online.pixelbattle.server.game.model.Pixel;
+import online.pixelbattle.server.game.repository.PixelRepository;
+import online.pixelbattle.server.security.model.UserAccount;
+import online.pixelbattle.server.security.repository.UserAccountRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.util.List;
+
+@Service
+@Transactional
+public class PixelService {
+
+    private final PixelRepository pixelRepository;
+    private final UserAccountRepository userAccountRepository;
+    private final GridConfig gridConfig;
+    private final CooldownConfig cooldownConfig;
+
+    public PixelService(PixelRepository pixelRepository, UserAccountRepository userAccountRepository,
+                        GridConfig gridConfig, CooldownConfig cooldownConfig) {
+        this.pixelRepository = pixelRepository;
+        this.userAccountRepository = userAccountRepository;
+        this.gridConfig = gridConfig;
+        this.cooldownConfig = cooldownConfig;
+    }
+
+    public void changeColor(int x, int y, String newColor, String username) {
+
+        UserAccount account = userAccountRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+
+        if (account.getLastPixelChange() != null &&
+                account.getLastPixelChange().isAfter(Instant.now().minusSeconds(cooldownConfig.getSeconds()))) {
+            throw new RuntimeException("Вы можете менять пиксель только раз в " + cooldownConfig.getSeconds() + " сек.");
+        }
+
+        Pixel pixel = pixelRepository.findByXAndY(x, y);
+
+        pixel.setColor(newColor);
+        pixel.setLastModified(Instant.now());
+        pixel.setOwner(account);
+
+        pixelRepository.save(pixel);
+
+        account.setLastPixelChange(Instant.now());
+        userAccountRepository.save(account);
+    }
+
+    public List<PixelUpdateDTO> getAllPixels() {
+        return pixelRepository.findAllByOrderByIdAsc().stream()
+                .map(pixel -> new PixelUpdateDTO(pixel.getX(), pixel.getY(), pixel.getColor()))
+                .toList();
+    }
+
+    public void createGridIfNotExists() {
+        int width = gridConfig.getWidth();
+        int height = gridConfig.getHeight();
+        long expectedCount = (long) width * height;
+
+        if (pixelRepository.count() != expectedCount) {
+            pixelRepository.deleteAll();
+
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    Pixel pixel = new Pixel();
+                    pixel.setX(x);
+                    pixel.setY(y);
+                    pixel.setId(y * width + x);
+                    pixel.setColor("#FFFFFF");
+                    pixelRepository.save(pixel);
+                }
+            }
+        }
+    }
+}
