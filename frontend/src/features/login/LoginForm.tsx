@@ -95,7 +95,10 @@ export const LoginForm = () => {
 
                         <Button
                             variant="outline"
-                            onClick={() => navigate("/game")}
+                            onClick={() => {
+                                localStorage.removeItem("token");
+                                navigate("/game")
+                            }}
                             mt="2"
                         >
                             Войти как гость

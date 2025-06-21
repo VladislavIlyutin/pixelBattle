@@ -2,7 +2,7 @@ package online.pixelbattle.server.game.service;
 
 import online.pixelbattle.server.game.config.CooldownConfig;
 import online.pixelbattle.server.game.config.GridConfig;
-import online.pixelbattle.server.game.dto.PixelUpdateDTO;
+import online.pixelbattle.server.game.dto.PixelResponseDTO;
 import online.pixelbattle.server.game.model.Pixel;
 import online.pixelbattle.server.game.repository.PixelRepository;
 import online.pixelbattle.server.security.model.UserAccount;
@@ -52,9 +52,9 @@ public class PixelService {
         userAccountRepository.save(account);
     }
 
-    public List<PixelUpdateDTO> getAllPixels() {
+    public List<PixelResponseDTO> getAllPixels() {
         return pixelRepository.findAllByOrderByIdAsc().stream()
-                .map(pixel -> new PixelUpdateDTO(pixel.getX(), pixel.getY(), pixel.getColor()))
+                .map(pixel -> new PixelResponseDTO(pixel.getX(), pixel.getY(), pixel.getColor()))
                 .toList();
     }
 

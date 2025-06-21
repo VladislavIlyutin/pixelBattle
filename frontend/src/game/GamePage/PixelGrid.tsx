@@ -20,13 +20,21 @@ const PixelGrid: React.FC = () => {
         isFlashing,
     } = usePixelGrid();
 
+    const token = localStorage.getItem('token');
+    const isGuest = !token; // Определяем, гость это или нет
+
     if (!config || grid.length === 0) {
         return <div>Загрузка поля...</div>;
     }
     return (
         <div className="pixel-grid">
             <CooldownTimer cooldown={cooldown} isFlashing={isFlashing} />
-            <PixelGridRenderer grid={grid} onPixelClick={handlePixelClick} />
+            {/* Передаём isGuest */}
+            <PixelGridRenderer
+                grid={grid}
+                onPixelClick={handlePixelClick}
+                isGuest={isGuest}
+            />
             <ColorButton
                 color={selectedColor}
                 onClick={() => setShowColorPicker(prev => !prev)}

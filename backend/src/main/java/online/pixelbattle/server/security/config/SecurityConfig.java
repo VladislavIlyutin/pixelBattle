@@ -8,6 +8,9 @@ import com.nimbusds.jose.proc.SecurityContext;
 import online.pixelbattle.server.security.service.UserAccountService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -34,6 +37,7 @@ import java.util.UUID;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final RsaKeys rsaKeys;
@@ -63,7 +67,12 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/accounts/register", "/api/auth/login", "/api/game").permitAll()
+                        .requestMatchers(
+                                "/api/accounts/register",
+                                "/api/auth/login",
+                                "/api/game/grid/config",
+                                "/api/game/grid",
+                                "/api/game/subscribe").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -103,5 +112,15 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(UserAccountService userAccountService) {
         return username -> userAccountService.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+    }
+    @Bean
+    public AuthenticationManager authenticationManager(
+            HttpSecurity http,
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder
+    ) throws Exception {
+        AuthenticationManagerBuilder authBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+        return authBuilder.build();
     }
 }

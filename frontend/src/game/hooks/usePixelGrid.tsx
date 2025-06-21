@@ -22,7 +22,7 @@ export const usePixelGrid = () => {
     const [isFlashing, setIsFlashing] = useState<boolean>(false);
 
     const token = localStorage.getItem('token');
-
+    const isGuest = !token;
 
     const getUsernameFromToken = (token: string): string => {
         try {
@@ -84,38 +84,23 @@ export const usePixelGrid = () => {
     useEffect(() => {
         const fetchConfig = async () => {
             try {
-                if (!token) {
-                    console.error("Токен не найден");
-                    return;
-                }
-
                 const response = await axios.get<{ width: number, height: number }>(
-                    'http://localhost:8080/api/game/grid/config',
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
+                    'http://localhost:8080/api/game/grid/config'
                 );
-
                 setConfig(response.data);
             } catch (error) {
                 console.error('Ошибка загрузки конфигурации', error);
             }
         };
         fetchConfig();
-    }, [token]);
+    }, []);
 
     useEffect(() => {
-        if (!config || !token) return;
+        if (!config) return;
 
         const fetchData = async () => {
             try {
-                const response = await axios.get<Pixel[]>('http://localhost:8080/api/game/grid', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+                const response = await axios.get<Pixel[]>('http://localhost:8080/api/game/grid');
                 const pixels = response.data;
                 const { width, height } = config;
 
@@ -139,9 +124,11 @@ export const usePixelGrid = () => {
         };
 
         fetchData();
-    }, [config, token]);
+    }, [config]);
 
     const handlePixelClick = async (x: number, y: number) => {
+        if (isGuest) return;
+
         if (cooldown > 0) {
             setIsFlashing(true);
             setTimeout(() => setIsFlashing(false), 500);
@@ -170,6 +157,24 @@ export const usePixelGrid = () => {
             setGrid(updatedGrid);
         }
     };
+    useEffect(() => {
+        const eventSource = new EventSource("http://localhost:8080/api/game/subscribe");
+
+        eventSource.addEventListener("message", (event) => {
+            const updatedPixel = JSON.parse(event.data);
+            setGrid(prevGrid => {
+                const newGrid = [...prevGrid];
+                if (newGrid[updatedPixel.y] && newGrid[updatedPixel.y][updatedPixel.x]) {
+                    newGrid[updatedPixel.y][updatedPixel.x] = updatedPixel.color;
+                }
+                return newGrid;
+            });
+        });
+
+        return () => {
+            eventSource.close();
+        };
+    }, []);
 
     return {
         grid,

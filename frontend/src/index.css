@@ -16,6 +16,17 @@ html, body, #root {
   background-position: center;
   z-index: -1;
 }
+.background-game {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #bcbcbc;
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
 #root {
   display: flex;
   align-items: center;

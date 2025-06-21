@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PixelUpdateDTO {
+public class PixelResponseDTO {
     private int x;
     private int y;
     private String color;

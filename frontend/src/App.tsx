@@ -1,13 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { LoginForm } from "./features/login/LoginForm";
 import RegisterForm from "./features/register/RegisterForm";
-import { GamePage } from "./features/GamePage/GamePage";
+import PixelGrid from "./game/GamePage/PixelGrid.tsx";
 
-const Background = () => {
-    return (
-        <div className="background"></div>
-    );
-};
+const Background = () => <div className="background" />;
+const BackgroundGame = () => <div className="background-game" />;
 
 function App() {
     return (
@@ -19,15 +16,15 @@ function App() {
 
 const AppContent = () => {
     const location = useLocation();
-    const showBackground = ["/", "/register"].includes(location.pathname);
 
     return (
         <>
-            {showBackground && <Background />}
+            {location.pathname === "/game" ? <BackgroundGame /> : <Background />}
+
             <Routes>
                 <Route path="/" element={<LoginForm />} />
                 <Route path="/register" element={<RegisterForm />} />
-                <Route path="/game" element={<GamePage />} />
+                <Route path="/game" element={<PixelGrid />} />
             </Routes>
         </>
     );

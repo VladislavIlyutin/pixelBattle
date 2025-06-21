@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 @Getter
@@ -24,6 +25,9 @@ public class UserAccount implements UserDetails{
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "last_pixel_change")
+    private Instant lastPixelChange;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))

@@ -1,4 +1,4 @@
-package online.pixelbattle.server.security.web.dto.exeption;
+package online.pixelbattle.server.security.handler;
 
 import online.pixelbattle.server.security.service.UsernameAlreadyExistsException;
 import org.springframework.http.HttpStatus;
