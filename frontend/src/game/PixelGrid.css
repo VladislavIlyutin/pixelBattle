@@ -1,9 +1,10 @@
 .cooldown-timer {
+    user-select: none;
     position: fixed;
     top: 5px;
     left: 78%;
     padding: 8px 16px;
-    background-color: #fffde7;
+    background-color: #f5f5f5;
     color: #333;
     font-weight: bold;
     font-size: 14px;
@@ -13,18 +14,23 @@
     align-items: center;
     gap: 30px;
     transition: background-color 0.3s ease;
+    z-index: 9999;
 }
+
 .cooldown-timer.flashing {
     background-color: #ffe0e0;
     animation: flash 0.5s ease-out;
 }
+
 .cooldown-time {
+    user-select: none;
     position: absolute;
     padding-left: 74%;
     color: #d32f2f;
     font-weight: bold;
     font-size: 18px;
 }
+
 @keyframes flash {
     0% { background-color: #ffe0e0; }
     50% { background-color: #ff9999; }
@@ -32,23 +38,105 @@
 }
 
 .pixel-grid {
-    display: grid;
-    gap: 0;
-    background-color: white;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    touch-action: none;
+
+}
+
+.grid-container {
+    position: absolute;
+    align-content: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    will-change: transform;
+}
+
+.zoom-slider-container {
+    position: fixed;
+    bottom: 20px; /* Выше кнопки выбора цвета */
+    left: 20px;
+    right: 0;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 10px;
+    z-index: 100;
+}
+
+.zoom-slider {
+    width: 200px;
+    max-width: 60%;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 20px;
+    padding: 15px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.zoom-slider input[type="range"] {
+    flex: 1;
+    height: 6px;
+    -webkit-appearance: none;
+    background: #e0e0e0;
+    border-radius: 3px;
+    outline: none;
+}
+
+.zoom-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4285f4;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.reset-camera-button {
+    user-select: none;
+    padding: 8px 15px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.reset-camera-button:hover {
+    background-color: #e9e9e9;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
 }
 
 .color-button {
     position: fixed;
     bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 20px;
+    left: 45%;
+    padding: 8px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 20px;
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     font-weight: bold;
+    transition: all 0.2s;
+    user-select: none;
     z-index: 999;
+}
+
+.color-button:hover {
+    transform: translateY(-2px);
 }
 
 .color-picker-popup {
@@ -77,8 +165,13 @@
     width: 10px;
     height: 10px;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 .pixel:hover {
-    border: 1px solid rgba(120, 118, 118, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
 
+.grid-container > div {
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
 }

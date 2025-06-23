@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 
 interface Pixel {
@@ -23,6 +23,9 @@ export const usePixelGrid = () => {
 
     const token = localStorage.getItem('token');
     const isGuest = !token;
+
+    const gridRef = useRef(grid);
+    gridRef.current = grid;
 
     const getUsernameFromToken = (token: string): string => {
         try {
@@ -135,7 +138,7 @@ export const usePixelGrid = () => {
             return;
         }
 
-        const updatedGrid = [...grid];
+        const updatedGrid = [...gridRef.current];
         updatedGrid[y][x] = selectedColor;
         setGrid(updatedGrid);
 
@@ -160,20 +163,19 @@ export const usePixelGrid = () => {
     useEffect(() => {
         const eventSource = new EventSource("http://localhost:8080/api/game/subscribe");
 
-        eventSource.addEventListener("message", (event) => {
+        const handler = (event: MessageEvent) => {
             const updatedPixel = JSON.parse(event.data);
-            setGrid(prevGrid => {
-                const newGrid = [...prevGrid];
-                if (newGrid[updatedPixel.y] && newGrid[updatedPixel.y][updatedPixel.x]) {
+            setGrid(prev => {
+                const newGrid = [...prev];
+                if (newGrid[updatedPixel.y]?.[updatedPixel.x]) {
                     newGrid[updatedPixel.y][updatedPixel.x] = updatedPixel.color;
                 }
                 return newGrid;
             });
-        });
-
-        return () => {
-            eventSource.close();
         };
+
+        eventSource.addEventListener("message", handler);
+        return () => eventSource.close();
     }, []);
 
     return {

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { AuthPromptModal } from './AuthPromptModal.tsx';
+// Pixel.tsx
+import React from 'react';
 import "/src/game/PixelGrid.css";
 
 interface PixelProps {
@@ -7,38 +7,16 @@ interface PixelProps {
     y: number;
     color: string;
     onClick: (x: number, y: number) => void;
-    isGuest: boolean;
 }
 
-const Pixel: React.FC<PixelProps> = ({ x, y, color, onClick, isGuest }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const handleClick = () => {
-        if (isGuest) {
-            setIsModalOpen(true);
-        } else {
-            onClick(x, y);
-        }
-    };
-
+const Pixel: React.FC<PixelProps> = ({ x, y, color, onClick }) => {
     return (
-        <>
-            <div
-                className="pixel"
-                style={{
-                    backgroundColor: color,
-                    cursor: isGuest ? 'not-allowed' : 'pointer'
-                }}
-                onClick={handleClick}
-            />
-            {isGuest && (
-                <AuthPromptModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                />
-            )}
-        </>
+        <div
+            className="pixel"
+            style={{ backgroundColor: color }}
+            onClick={() => onClick(x, y)}
+        />
     );
 };
 
-export default Pixel;
+export default React.memo(Pixel);
