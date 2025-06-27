@@ -31,8 +31,7 @@ npm install
 
 ```
 cd backend
-./mvnw spring-boot:run   # Linux/macOS
-mvnw.cmd spring-boot:run  # Windows
+./mvnw spring-boot:run
 ```
 
 ### Запусти frontend

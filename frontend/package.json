@@ -13,6 +13,7 @@
     "@chakra-ui/form-control": "^2.2.0",
     "@chakra-ui/react": "^2.8.0",
     "@hookform/resolvers": "^5.1.1",
+    "@uiw/react-color": "^2.6.0",
     "axios": "^1.9.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
