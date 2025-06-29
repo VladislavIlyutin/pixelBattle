@@ -28,9 +28,6 @@ public class CooldownController {
 
     @GetMapping("/cooldown")
     public CooldownResponse getCooldown(Authentication authentication) {
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            return new CooldownResponse(0);
-        }
 
         String username = authentication.getName();
         long remaining = userAccountRepository.findByUsername(username)

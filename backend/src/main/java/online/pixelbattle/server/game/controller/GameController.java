@@ -26,15 +26,13 @@ public class GameController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/change-color")
-    public ResponseEntity<Void> changeColor(@RequestBody PixelResponseDTO dto,
-                                            Authentication authentication) {
+    public void changeColor(@RequestBody PixelResponseDTO dto,
+                            Authentication authentication) {
 
         pixelService.changeColor(dto.getX(), dto.getY(), dto.getColor(), authentication.getName());
 
         PixelResponseDTO response = new PixelResponseDTO(dto.getX(), dto.getY(), dto.getColor());
         sseController.notifyClients(response);
-
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/grid")

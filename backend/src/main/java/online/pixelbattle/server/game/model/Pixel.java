@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import online.pixelbattle.server.security.model.UserAccount;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -11,6 +12,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "pixels")
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 public class Pixel {
@@ -29,7 +31,10 @@ public class Pixel {
     private UserAccount owner;
 
     private Instant lastModified;
-
+    @PreUpdate
+    protected void onUpdate() {
+        this.lastModified = Instant.now();
+    }
     public Pixel() {}
 
     @Override

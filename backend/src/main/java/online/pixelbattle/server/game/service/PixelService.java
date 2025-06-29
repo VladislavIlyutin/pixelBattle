@@ -43,7 +43,6 @@ public class PixelService {
         Pixel pixel = pixelRepository.findByXAndY(x, y);
 
         pixel.setColor(newColor);
-        pixel.setLastModified(Instant.now());
         pixel.setOwner(account);
 
         pixelRepository.save(pixel);

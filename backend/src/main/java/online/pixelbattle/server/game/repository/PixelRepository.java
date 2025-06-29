@@ -9,7 +9,5 @@ import java.util.List;
 
 public interface PixelRepository extends JpaRepository<Pixel, Integer> {
     List<Pixel> findAllByOrderByIdAsc();
-
-    @Query
-    Pixel findByXAndY(@Param("x") int x, @Param("y") int y);
+    Pixel findByXAndY(int x, int y);
 }

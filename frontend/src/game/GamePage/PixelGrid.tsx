@@ -127,6 +127,40 @@ const PixelGrid: React.FC = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, [resetCamera]);
 
+    const saveGridToImage = useCallback(() => {
+        if (!config || grid.length === 0) return;
+
+        const pixelSize = 10;
+        const canvas = document.createElement('canvas');
+        canvas.width = config.width * pixelSize;
+        canvas.height = config.height * pixelSize;
+        const ctx = canvas.getContext('2d');
+
+        if (!ctx) {
+            return;
+        }
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let y = 0; y < grid.length; y++) {
+            for (let x = 0; x < grid[y].length; x++) {
+                ctx.fillStyle = grid[y][x];
+                ctx.fillRect(
+                    x * pixelSize,
+                    y * pixelSize,
+                    pixelSize,
+                    pixelSize
+                );
+            }
+        }
+
+        const link = document.createElement('a');
+        link.download = `Pixel Battle.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }, [config, grid]);
+
     const handleSliderChange = useCallback((newScale: number) => {
         const container = containerRef.current;
         if (!container) return;
@@ -148,6 +182,7 @@ const PixelGrid: React.FC = () => {
     if (!config || grid.length === 0) {
         return <div>Загрузка поля...</div>;
     }
+
     return (
         <div className="pixel-grid">
             <CooldownTimer cooldown={cooldown} isFlashing={isFlashing} />
@@ -194,6 +229,16 @@ const PixelGrid: React.FC = () => {
                     title="Сбросить вид"
                 >
                     Сброс
+                </button>
+                <button
+                    className="save-image-button"
+                    onClick={saveGridToImage}
+                >
+                    <img
+                        src="/src/assets/image.png"
+                        alt="Сохранить PNG"
+                        className="save-icon"
+                    />
                 </button>
             </div>
 

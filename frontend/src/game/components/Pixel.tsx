@@ -1,4 +1,3 @@
-// Pixel.tsx
 import React from 'react';
 import "/src/game/PixelGrid.css";
 
