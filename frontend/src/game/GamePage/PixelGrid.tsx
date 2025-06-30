@@ -19,6 +19,7 @@ const PixelGrid: React.FC = () => {
         setShowColorPicker,
         setSelectedColor,
         isFlashing,
+        activeUsers
     } = usePixelGrid();
 
     const [scale, setScale] = useState(1);
@@ -30,9 +31,14 @@ const PixelGrid: React.FC = () => {
     const lastPositionRef = useRef({ x: 0, y: 0 });
     const isMouseDownRef = useRef(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const token = localStorage.getItem('token');
     const isGuest = !token;
+
+    const filteredUsers = activeUsers.filter(user =>
+        user.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     const handlePixelClickWrapper = useCallback((x: number, y: number) => {
         const wasDragging = Math.sqrt(
@@ -190,6 +196,24 @@ const PixelGrid: React.FC = () => {
                 isOpen={isAuthModalOpen}
                 onClose={() => setIsAuthModalOpen(false)}
             />
+            <div className="active-users-display">
+                <input
+                    type="text"
+                    placeholder="Поиск пользователей"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="user-search-input"
+                />
+                <span className="users-title">Активные пользователи: {filteredUsers.length}</span>
+                <ul className="user-list">
+                    {filteredUsers.map((user, index) => (
+                        <li key={index} className="user-item">
+                            {user}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
             <div
                 ref={containerRef}
                 className="grid-container"

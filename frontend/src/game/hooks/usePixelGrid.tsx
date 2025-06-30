@@ -20,6 +20,7 @@ export const usePixelGrid = () => {
     const [showColorPicker, setShowColorPicker] = useState(false);
     const [cooldown, setCooldown] = useState<number>(0);
     const [isFlashing, setIsFlashing] = useState<boolean>(false);
+    const [activeUsers, setActiveUsers] = useState<string[]>([]);
 
     const token = localStorage.getItem('token');
     const isGuest = !token;
@@ -178,6 +179,24 @@ export const usePixelGrid = () => {
         return () => eventSource.close();
     }, []);
 
+    useEffect(() => {
+        const fetchActiveUsers = async () => {
+            try {
+                const response = await axios.get<string[]>(
+                    'http://localhost:8080/api/game/active-users'
+                );
+                setActiveUsers(response.data);
+            } catch (error) {
+                console.error('Ошибка загрузки списка активных пользователей:', error);
+            }
+        };
+
+        fetchActiveUsers();
+        const interval = setInterval(fetchActiveUsers, 10000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     return {
         grid,
         config,
@@ -188,6 +207,7 @@ export const usePixelGrid = () => {
         setShowColorPicker,
         setSelectedColor,
         isFlashing,
-        setIsFlashing
+        setIsFlashing,
+        activeUsers
     };
 };

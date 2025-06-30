@@ -29,6 +29,9 @@ public class UserAccount implements UserDetails{
     @Column(name = "last_pixel_change")
     private Instant lastPixelChange;
 
+    @Column(name = "last_activity")
+    private Instant lastActivity;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "authority")

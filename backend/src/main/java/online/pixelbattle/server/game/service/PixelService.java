@@ -7,6 +7,7 @@ import online.pixelbattle.server.game.model.Pixel;
 import online.pixelbattle.server.game.repository.PixelRepository;
 import online.pixelbattle.server.security.model.UserAccount;
 import online.pixelbattle.server.security.repository.UserAccountRepository;
+import online.pixelbattle.server.security.service.ActiveUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +22,15 @@ public class PixelService {
     private final UserAccountRepository userAccountRepository;
     private final GridConfig gridConfig;
     private final CooldownConfig cooldownConfig;
+    private final ActiveUserService activeUserService;
 
     public PixelService(PixelRepository pixelRepository, UserAccountRepository userAccountRepository,
-                        GridConfig gridConfig, CooldownConfig cooldownConfig) {
+                        GridConfig gridConfig, CooldownConfig cooldownConfig, ActiveUserService activeUserService) {
         this.pixelRepository = pixelRepository;
         this.userAccountRepository = userAccountRepository;
         this.gridConfig = gridConfig;
         this.cooldownConfig = cooldownConfig;
+        this.activeUserService = activeUserService;
     }
 
     public void changeColor(int x, int y, String newColor, String username) {
@@ -47,6 +50,7 @@ public class PixelService {
 
         pixelRepository.save(pixel);
 
+        activeUserService.updateUserActivity(username);
         account.setLastPixelChange(Instant.now());
         userAccountRepository.save(account);
     }

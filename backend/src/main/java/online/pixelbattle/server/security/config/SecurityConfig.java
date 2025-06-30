@@ -72,7 +72,8 @@ public class SecurityConfig {
                                 "/api/auth/login",
                                 "/api/game/grid/config",
                                 "/api/game/grid",
-                                "/api/game/subscribe").permitAll()
+                                "/api/game/subscribe",
+                                "/api/game/active-users").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
